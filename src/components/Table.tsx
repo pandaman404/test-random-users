@@ -1,4 +1,5 @@
-import { SortBy, User, UserId } from '../@types/user';
+import { SortBy } from '../@types/consts';
+import { User, UserId } from '../@types/user';
 
 interface TableProps {
   users: User[];

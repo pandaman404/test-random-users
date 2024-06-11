@@ -7,10 +7,3 @@ export interface User {
 }
 
 export type UserId = Pick<User, 'id'>;
-
-export enum SortBy {
-  NONE = 'none',
-  FIRSTNAME = 'firstname',
-  LASTNAME = 'lastname',
-  COUNTRY = 'country',
-}

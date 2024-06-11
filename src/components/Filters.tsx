@@ -1,4 +1,4 @@
-import { SortBy } from '../@types/user';
+import { SortBy } from '../@types/consts';
 
 interface FiltersProps {
   sorted: SortBy;

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { SortBy, User, UserId } from '../@types/user';
+import { SortBy } from '../@types/consts';
+import { User, UserId } from '../@types/user';
+
 import { getHundredRandomUsers } from '../services/user';
 
 export function useUsers() {
