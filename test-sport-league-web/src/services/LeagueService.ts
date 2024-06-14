@@ -1,3 +1,4 @@
+import { ResponseGetAccessToken, ResponseGetAllMatches } from '../@types/api';
 import { Match } from '../@types/league';
 
 /**
@@ -9,6 +10,10 @@ import { Match } from '../@types/league';
  *
  */
 class LeagueService {
+  private _matches: Match[] = [];
+
+  private static readonly API_URI = 'http://localhost:3001/api/v1';
+
   /**
    * Sets the match schedule.
    * Match schedule will be given in the following form:
@@ -36,7 +41,7 @@ class LeagueService {
    * @param {Array} matches List of matches.
    */
   setMatches(matches: Match[]) {
-    return matches;
+    this._matches = matches;
   }
 
   /**
@@ -44,7 +49,9 @@ class LeagueService {
    *
    * @returns {Array} List of matches.
    */
-  getMatches() {}
+  getMatches() {
+    return this._matches;
+  }
 
   /**
    * Returns the leaderboard in a form of a list of JSON objecs.
@@ -63,10 +70,29 @@ class LeagueService {
    */
   getLeaderboard() {}
 
-  /**
-   * Asynchronic function to fetch the data from the server.
-   */
-  async fetchData() {}
+  async fetchData(): Promise<Match[]> {
+    try {
+      const { access_token }: ResponseGetAccessToken = await fetch(
+        `${LeagueService.API_URI}/getAccessToken`
+      ).then((res) => res.json());
+
+      const response: ResponseGetAllMatches = await fetch(
+        `${LeagueService.API_URI}/getAllMatches`,
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        }
+      ).then((res) => res.json());
+
+      if (response.success && response.matches) {
+        return response.matches;
+      }
+
+      return [] as Match[];
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+      throw error;
+    }
+  }
 }
 
 export default LeagueService;
