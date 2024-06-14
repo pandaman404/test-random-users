@@ -15,8 +15,7 @@ export const SchedulePage: React.FC = () => {
 };
 
 const Wrapper = styled.main`
-  margin: 0 auto;
   text-align: center;
   width: inherit;
-  min-height: 82.4dvh;
+  flex: 1;
 `;

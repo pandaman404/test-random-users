@@ -4,19 +4,24 @@ import styled from 'styled-components';
 
 export const NotFoundPage: React.FC = () => {
   return (
-    <>
+    <Wrapper>
       <Header />
-      <Wrapper>
+      <div>
         <img src='/images/404.png' alt='' />
-      </Wrapper>
+      </div>
       <Footer />
-    </>
+    </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
+  min-height: 100dvh;
   display: flex;
-  justify-content: center;
-  margin: 60px 0;
-  height: 75.8dvh;
+  flex-flow: column;
+
+  div {
+    margin: 60px 0;
+    flex: 1;
+    text-align: center;
+  }
 `;

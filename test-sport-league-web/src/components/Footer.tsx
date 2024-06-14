@@ -13,4 +13,5 @@ const Wrapper = styled.footer`
   display: flex;
   align-items: center;
   justify-content: end;
+  bottom: 0;
 `;
