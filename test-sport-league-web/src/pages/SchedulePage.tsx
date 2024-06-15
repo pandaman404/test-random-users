@@ -3,7 +3,7 @@ import { LeagueScheduleTable } from '../components/LeagueScheduleTable';
 import { Title } from '../components/Title';
 import { useLeagueContext } from '../context/LeagueContext';
 
-export const SchedulePage: React.FC = () => {
+const SchedulePage: React.FC = () => {
   const { matches } = useLeagueContext();
   return (
     <Wrapper>
@@ -18,3 +18,5 @@ const Wrapper = styled.main`
   width: inherit;
   flex: 1;
 `;
+
+export default SchedulePage;

@@ -1,9 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { lazy } from 'react';
 
-import { NotFoundPage } from '../pages/NotFoundPage';
-import { LeaderBoardPage } from '../pages/LeaderBoardPage';
-import { SchedulePage } from '../pages/SchedulePage';
-import { RootLayout } from '../components/RootLayout';
+const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
+const LeaderBoardPage = lazy(() => import('../pages/LeaderBoardPage'));
+const SchedulePage = lazy(() => import('../pages/SchedulePage'));
+const RootLayout = lazy(() => import('../components/RootLayout'));
 
 export const router = createBrowserRouter([
   {

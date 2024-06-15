@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Match } from '../@types/league';
 import { flagCodes } from '../utils/flags';
 import { createDateFromTimeStamp } from '../utils/date';
+import { Loader } from './Loader';
 
 interface LeagueScheduleTableProps {
   matches: Match[];
@@ -12,7 +13,7 @@ export const LeagueScheduleTable: React.FC<LeagueScheduleTableProps> = ({
   matches,
 }) => {
   if (!matches.length) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (

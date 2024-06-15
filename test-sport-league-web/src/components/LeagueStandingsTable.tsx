@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { LeaderBoard } from '../@types/league';
 import { flagCodes } from '../utils/flags';
+import { Loader } from './Loader';
 
 interface LeagueStandingsTableProps {
   leaderBoardList: LeaderBoard[];
@@ -10,6 +11,10 @@ interface LeagueStandingsTableProps {
 export const LeagueStandingsTable: React.FC<LeagueStandingsTableProps> = ({
   leaderBoardList,
 }) => {
+  if (!leaderBoardList.length) {
+    return <Loader />;
+  }
+
   return (
     <Wrapper>
       <Head>

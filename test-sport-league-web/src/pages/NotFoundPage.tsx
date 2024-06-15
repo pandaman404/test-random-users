@@ -2,7 +2,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import styled from 'styled-components';
 
-export const NotFoundPage: React.FC = () => {
+const NotFoundPage: React.FC = () => {
   return (
     <Wrapper>
       <Header />
@@ -25,3 +25,5 @@ const Wrapper = styled.div`
     text-align: center;
   }
 `;
+
+export default NotFoundPage;

@@ -3,10 +3,9 @@ import { useLeagueContext } from '../context/LeagueContext';
 import { Title } from '../components/Title';
 import { LeagueStandingsTable } from '../components/LeagueStandingsTable';
 
-export const LeaderBoardPage: React.FC = () => {
+const LeaderBoardPage: React.FC = () => {
   const { leaderBoardList } = useLeagueContext();
 
-  console.log(leaderBoardList);
   return (
     <Wrapper>
       <Title text='League Standings' />
@@ -20,3 +19,5 @@ const Wrapper = styled.main`
   width: inherit;
   flex: 1;
 `;
+
+export default LeaderBoardPage;
