@@ -127,6 +127,9 @@ class LeagueService {
       }
     });
 
+    // Ordenamos leaderboard
+    this._leaderboardList = this.sortLeaderBoard(this._leaderboardList);
+
     return this._leaderboardList;
   }
 
@@ -134,6 +137,27 @@ class LeagueService {
     if (score1 > score2) return 3;
     if (score1 === score2) return 1;
     return 0;
+  }
+
+  sortLeaderBoard(leaderBoardList: LeaderBoard[]) {
+    return leaderBoardList.sort((a, b) => {
+      if (a.points !== b.points) {
+        return b.points - a.points; // Ordenar por puntos (Descendente)
+      }
+
+      const goalDifferenceA = a.goalsFor - a.goalsAgainst;
+      const goalDifferenceB = b.goalsFor - b.goalsAgainst;
+
+      if (goalDifferenceA != goalDifferenceB) {
+        return goalDifferenceB - goalDifferenceA; // Ordenar por diferencia de gol (Descendente)
+      }
+
+      if (a.goalsFor != b.goalsFor) {
+        return goalDifferenceB - goalDifferenceA; // Ordenar por goles a favor (Descendente)
+      }
+
+      return a.teamName.localeCompare(b.teamName); // orden alfabetico (Ascendente)
+    });
   }
 
   async fetchData(): Promise<Match[]> {
