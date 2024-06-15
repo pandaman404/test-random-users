@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 import { Match } from '../@types/league';
 import { flagCodes } from '../utils/flags';
 import { createDateFromTimeStamp } from '../utils/date';
@@ -34,12 +35,12 @@ export const LeagueScheduleTable: React.FC<LeagueScheduleTableProps> = ({
             awayTeamScore,
           }) => {
             return (
-              <div key={matchDate + homeTeam + awayTeam} className='row'>
+              <div key={uuidv4()} className='row'>
                 <div className='cell matchDateCol'>
                   {createDateFromTimeStamp(matchDate)
                     .split(' ')
                     .map((item) => (
-                      <span>{item}</span>
+                      <span key={uuidv4()}>{item}</span>
                     ))}
                 </div>
                 <div className='cell stadiumCol'>{stadium}</div>
@@ -92,29 +93,29 @@ const Wrapper = styled.div`
     display: none;
   }
 
-  .stadiumCol {
-    @media only screen and (min-width: 700px) {
-      display: block;
-    }
-  }
-
-  .matchDateCol {
-    @media only screen and (min-width: 1000px) {
-      display: flex;
-    }
-  }
-
   .matchDateCol,
   .homeTeamCol,
   .awayTeamCol {
     max-width: 400px;
+  }
+
+  @media only screen and (min-width: 700px) {
+    .stadiumCol {
+      display: block;
+    }
+  }
+
+  @media only screen and (min-width: 1000px) {
+    .matchDateCol {
+      display: flex;
+    }
   }
 `;
 
 const Head = styled.div`
   background-color: var(--backgroundTable);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   height: 40px;
   width: 100%;
   display: flex;
@@ -141,8 +142,8 @@ const Body = styled.div`
 
     .homeTeamCol,
     .awayTeamCol {
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
       gap: 15px;
       position: relative;
     }

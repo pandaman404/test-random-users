@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import { LeagueScheduleTable } from '../components/LeagueScheduleTable';
 import { Title } from '../components/Title';
-import { useSchedule } from '../hooks/useSchedule';
+import { useLeagueContext } from '../context/LeagueContext';
 
 export const SchedulePage: React.FC = () => {
-  const { matches } = useSchedule();
-
+  const { matches } = useLeagueContext();
   return (
     <Wrapper>
       <Title text='League Schedule' />

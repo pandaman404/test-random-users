@@ -1,5 +1,5 @@
 import { ResponseGetAccessToken, ResponseGetAllMatches } from '../@types/api';
-import { Match } from '../@types/league';
+import { LeaderBoard, Match } from '../@types/league';
 
 /**
  * A class representing a service that processes the data for match schedule
@@ -11,6 +11,7 @@ import { Match } from '../@types/league';
  */
 class LeagueService {
   private _matches: Match[] = [];
+  private _leaderboardList: LeaderBoard[] = [];
 
   private static readonly API_URI = 'http://localhost:3001/api/v1';
 
@@ -68,7 +69,72 @@ class LeagueService {
    *
    * @returns {Array} List of teams representing the leaderboard.
    */
-  getLeaderboard() {}
+  getLeaderboard(): LeaderBoard[] {
+    this._matches.forEach((match) => {
+      const { homeTeam, awayTeam, matchPlayed, homeTeamScore, awayTeamScore } =
+        match;
+
+      const homeTeamIndex = this._leaderboardList.findIndex(
+        ({ teamName }) => teamName === homeTeam
+      );
+
+      const awayTeamIndex = this._leaderboardList.findIndex(
+        ({ teamName }) => teamName === awayTeam
+      );
+
+      // agregar nuevos equipos al leaderboard
+      if (homeTeamIndex === -1) {
+        const newItem = {} as LeaderBoard;
+        newItem.teamName = homeTeam;
+        newItem.matchPlayed = matchPlayed ? 1 : 0;
+        newItem.goalsFor = homeTeamScore;
+        newItem.goalsAgainst = awayTeamScore;
+        newItem.points = this.calculateMatchPoints(
+          homeTeamScore,
+          awayTeamScore
+        );
+        this._leaderboardList.push(newItem);
+      }
+
+      if (awayTeamIndex === -1) {
+        const newItem = {} as LeaderBoard;
+        newItem.teamName = awayTeam;
+        newItem.matchPlayed = matchPlayed ? 1 : 0;
+        newItem.goalsFor = awayTeamScore;
+        newItem.goalsAgainst = homeTeamScore;
+        newItem.points = this.calculateMatchPoints(
+          awayTeamScore,
+          homeTeamScore
+        );
+        this._leaderboardList.push(newItem);
+      }
+
+      // Contar Partidos jugados, goles a favor/en contra y numero de puntos
+      if (homeTeamIndex >= 0 && matchPlayed) {
+        this._leaderboardList[homeTeamIndex].matchPlayed += 1;
+        this._leaderboardList[homeTeamIndex].goalsFor += homeTeamScore;
+        this._leaderboardList[homeTeamIndex].goalsAgainst += awayTeamScore;
+        this._leaderboardList[homeTeamIndex].points +=
+          this.calculateMatchPoints(homeTeamScore, awayTeamScore);
+      }
+
+      if (awayTeamIndex >= 0 && matchPlayed) {
+        this._leaderboardList[awayTeamIndex].matchPlayed += 1;
+        this._leaderboardList[awayTeamIndex].goalsFor += awayTeamScore;
+        this._leaderboardList[awayTeamIndex].goalsAgainst += homeTeamScore;
+        this._leaderboardList[awayTeamIndex].points +=
+          this.calculateMatchPoints(awayTeamScore, homeTeamScore);
+      }
+    });
+
+    return this._leaderboardList;
+  }
+
+  calculateMatchPoints(score1: number, score2: number) {
+    if (score1 > score2) return 3;
+    if (score1 === score2) return 1;
+    return 0;
+  }
 
   async fetchData(): Promise<Match[]> {
     try {

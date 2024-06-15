@@ -1,8 +1,7 @@
-interface Flags {
-  [key: string]: string;
-}
+// https://flagsapi.com/
+import { FlagCodes } from '../@types/league';
 
-export const flagCodes: Flags = {
+export const flagCodes: FlagCodes = {
   Brazil: 'BR',
   Serbia: 'RS',
   Switzerland: 'CH',

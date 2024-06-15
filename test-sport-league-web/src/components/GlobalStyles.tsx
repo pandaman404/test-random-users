@@ -38,7 +38,7 @@ export const GlobalStyles = createGlobalStyle`
 	}
 
   body {
-		min-height: 100dvh;
+	min-height: 100dvh;
     font-family: 'Open Sans', sans-serif;
   }
 `;
