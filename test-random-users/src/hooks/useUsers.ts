@@ -1,33 +1,48 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SortBy } from '../@types/consts';
 import { User, UserId } from '../@types/user';
-
-import { getHundredRandomUsers } from '../services/user';
+import { getRandomUsers } from '../services/user';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 export function useUsers() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [sorted, setSorted] = useState<SortBy>(SortBy.NONE);
-  const initialUsers = useRef<User[]>([]);
-  const [countryQuery, setCountryQuery] = useState<string | null>(null);
+  const { isLoading, isFetching, isError, data, refetch, fetchNextPage, hasNextPage } = useInfiniteQuery<{
+    users: User[];
+    nextPage?: number;
+  }>({
+    queryKey: ['users'], // key de la query
+    queryFn: ({ pageParam }) => getRandomUsers(pageParam), // función asincrona
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage, // paginación
+    refetchOnWindowFocus: false, // no hacer refetching cuando hacemos focus en la ventana
+    staleTime: Infinity, // los datos siempre van a ser frescos
+  });
 
-  useEffect(() => {
-    getHundredRandomUsers().then((users) => {
-      setUsers(users);
-      initialUsers.current = users;
-    });
-  }, []);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useMemo(() => {
+    if (data) {
+      setUsers(data?.pages?.flatMap((page) => page.users) ?? []);
+    }
+  }, [data]);
+
+  const [sorted, setSorted] = useState<SortBy>(SortBy.NONE);
+  const [countryQuery, setCountryQuery] = useState<string | null>(null);
 
   const handleSortUsers = (sortBy: SortBy): void => {
     setSorted(sortBy);
   };
 
-  const resetUsers = (): void => {
-    setSorted(SortBy.NONE);
-    setUsers(initialUsers.current);
+  const resetUsers = async (): Promise<void> => {
+    console.log(isLoading);
+    const { data } = await refetch();
+    if (data) {
+      setUsers(data.pages.flatMap((page) => page.users));
+    }
+    console.log(isLoading);
   };
 
   const deleteUser = ({ id }: UserId): void => {
-    return setUsers(users.filter((user) => user.id !== id));
+    setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
   };
 
   const handleCountryQuery = (value: string): void => {
@@ -35,28 +50,18 @@ export function useUsers() {
   };
 
   const filteredUsers = useMemo(() => {
-    return countryQuery
-      ? [...users].filter((user) =>
-          user.country.toLocaleLowerCase().includes(countryQuery)
-        )
-      : users;
+    return countryQuery ? [...users].filter((user) => user.country.toLocaleLowerCase().includes(countryQuery)) : users;
   }, [users, countryQuery]);
 
   const sortedUsers = useMemo(() => {
     if (sorted === SortBy.COUNTRY) {
-      return [...filteredUsers].sort((a, b) =>
-        a.country.localeCompare(b.country)
-      );
+      return [...filteredUsers].sort((a, b) => a.country.localeCompare(b.country));
     }
     if (sorted === SortBy.FIRSTNAME) {
-      return [...filteredUsers].sort((a, b) =>
-        a.firstName.localeCompare(b.firstName)
-      );
+      return [...filteredUsers].sort((a, b) => a.firstName.localeCompare(b.firstName));
     }
     if (sorted === SortBy.LASTNAME) {
-      return [...filteredUsers].sort((a, b) =>
-        a.lastName.localeCompare(b.lastName)
-      );
+      return [...filteredUsers].sort((a, b) => a.lastName.localeCompare(b.lastName));
     }
     return filteredUsers;
   }, [filteredUsers, sorted]);
@@ -69,5 +74,10 @@ export function useUsers() {
     resetUsers,
     deleteUser,
     handleCountryQuery,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
   };
 }

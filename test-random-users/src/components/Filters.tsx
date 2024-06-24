@@ -4,7 +4,7 @@ interface FiltersProps {
   sorted: SortBy;
   toggleShowRowColors: () => void;
   handleSortUsers: (sortBy: SortBy) => void;
-  resetUsers: () => void;
+  resetUsers: () => Promise<void>;
   handleCountryQuery: (value: string) => void;
 }
 
@@ -17,28 +17,16 @@ export const Filters: React.FC<FiltersProps> = ({
 }) => {
   return (
     <header className='flex items-center gap-5'>
-      <button
-        className='px-3 py-1 bg-blue-500 text-white rounded'
-        onClick={toggleShowRowColors}
-      >
+      <button className='px-3 py-1 bg-blue-500 text-white rounded' onClick={toggleShowRowColors}>
         Colorea Filas
       </button>
       <button
-        className={`px-3 py-1 text-white rounded ${
-          sorted === SortBy.COUNTRY ? 'bg-blue-300' : 'bg-blue-500'
-        }`}
-        onClick={() =>
-          sorted === SortBy.COUNTRY
-            ? handleSortUsers(SortBy.NONE)
-            : handleSortUsers(SortBy.COUNTRY)
-        }
+        className={`px-3 py-1 text-white rounded ${sorted === SortBy.COUNTRY ? 'bg-blue-300' : 'bg-blue-500'}`}
+        onClick={() => (sorted === SortBy.COUNTRY ? handleSortUsers(SortBy.NONE) : handleSortUsers(SortBy.COUNTRY))}
       >
         Ordena por país
       </button>
-      <button
-        className='px-3 py-1 bg-blue-500 text-white rounded'
-        onClick={resetUsers}
-      >
+      <button className='px-3 py-1 bg-blue-500 text-white rounded' onClick={async () => await resetUsers()}>
         Restaurar estado inicial
       </button>
       <input
